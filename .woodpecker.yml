@@ -1,0 +1,14 @@
+steps:
+  build:
+    image: docker.io/docker:latest
+    environment:
+      DOCKER_BUILDKIT: "0"
+    commands:
+      - docker login git.naaulu.org -u "$FORGEJO_USERNAME" -p "$FORGEJO_TOKEN"
+      - docker build --build-arg CACHEBUST=$(date +%s) -t git.naaulu.org/naaulu/naaulu-live:latest .
+      - docker push git.naaulu.org/naaulu/naaulu-live:latest
+    when:
+      event:
+        - push
+      branch:
+        - main

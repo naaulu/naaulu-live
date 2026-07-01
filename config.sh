@@ -1,0 +1,18 @@
+#!/bin/bash
+[ -f /opt/naaulu-live/.env ] && set -a && source /opt/naaulu-live/.env && set +a
+
+NAAULU_COUNTRY="${NAAULU_COUNTRY:-est}"
+NAAULU_PRODUCT="${NAAULU_PRODUCT:-dove}"
+NAAULU_NETWORK="${NAAULU_NETWORK:-est}"
+NAAULU_RESOLUTION_BASE="1km"
+NAAULU_RESOLUTION_COMBINED="2km"
+NAAULU_LOG_LEVEL="info"
+
+WEB_USER="${WEB_USER:?WEB_USER is required}"
+WEB_HOST="${WEB_HOST:?WEB_HOST is required}"
+WEB_PASS="${WEB_PASS:?WEB_PASS is required}"
+REMOTE_DIR="www"
+
+RETENTION_5MIN_HOURS=3
+RETENTION_HOURLY_DAYS=1
+RETENTION_DAILY_DAYS=20
