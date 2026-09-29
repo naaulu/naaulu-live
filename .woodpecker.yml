@@ -1,0 +1,31 @@
+steps:
+  build:
+    image: docker.io/docker:latest
+    environment:
+      DOCKER_BUILDKIT: "1"
+    commands:
+      - set -e
+      - docker buildx create --driver docker-container --name multiarch --use
+      - docker login git.naaulu.org -u "$FORGEJO_USERNAME" -p "$FORGEJO_TOKEN"
+      - docker buildx build --push --platform linux/amd64 --build-arg CACHEBUST=$(date +%s) -t git.naaulu.org/naaulu/naaulu-live:latest .
+      - docker buildx imagetools inspect git.naaulu.org/naaulu/naaulu-live:latest
+    when:
+      event:
+        - push
+      branch:
+        - main
+
+  mirror:
+    image: ubuntu:latest
+    environment:
+      GITHUB_TOKEN:
+        from_secret: GITHUB_TOKEN
+    commands:
+      - apt-get update && apt-get install -y git
+      - git remote add github https://$GITHUB_TOKEN@github.com/naaulu/naaulu-live.git
+      - git push github main -f
+    when:
+      event:
+        - push
+      branch:
+        - main
